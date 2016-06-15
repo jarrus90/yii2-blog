@@ -16,11 +16,17 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0",
-        "kartik-v/yii2-widgets": "*"
+        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-grid": "*",
+        "jarrus90/yii2-redactor": "*",
+        "jarrus90/yii2-core": "*"
     },
     "autoload": {
         "psr-4": {
             "jarrus90\\Blog\\": ""
         }
+    },
+    "extra": {
+        "bootstrap": "jarrus90\\Blog\\Bootstrap"
     }
 }
