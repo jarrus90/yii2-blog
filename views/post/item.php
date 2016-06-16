@@ -10,11 +10,12 @@ use yii\bootstrap\ActiveForm;
 use kartik\select2\Select2;
 use kartik\file\FileInput;
 use jarrus90\Blog\Models\Tag;
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
 $form = ActiveForm::begin([
-            'layout' => 'horizontal',
+            //'layout' => 'horizontal',
             'enableAjaxValidation' => true,
             'enableClientValidation' => false,
             'options' => ['enctype' => 'multipart/form-data'],
@@ -35,7 +36,7 @@ $form = ActiveForm::begin([
                 <?= $form->field($model, 'key') ?>
                 <?= $form->field($model, 'title') ?>
                 <?=
-                $form->field($model, 'content')->widget(\jarrus90\Content\Widgets\Redactor::className(), [
+                $form->field($model, 'content')->widget(\jarrus90\Blog\Widgets\Redactor::className(), [
                     'clientOptions' => [
                         'lang' => Yii::$app->language,
                         'minHeight' => 500,
@@ -65,16 +66,14 @@ $form = ActiveForm::begin([
                 </div>
             </div>
             <div class="box-body">
-                <div class="container-fluid">
-                    <?=
-                    $form->field($model, 'active_from', [
-                        'template' => $model->getAttributeLabel('active_from') . '{input}{hint}{error}'
-                    ])->widget(kartik\datetime\DateTimePicker::className(), [
-                        'options' => [
-                        ]
-                    ]);
-                    ?>
-                </div>
+                <?=
+                $form->field($model, 'active_from', [
+                    'template' => $model->getAttributeLabel('active_from') . '{input}{hint}{error}'
+                ])->widget(kartik\datetime\DateTimePicker::className(), [
+                    'options' => [
+                    ]
+                ]);
+                ?>
             </div>
             <div class="box-footer">
                 <?= $form->field($model, 'comments_enabled')->checkbox() ?>
@@ -85,32 +84,30 @@ $form = ActiveForm::begin([
                 <?= $model->getAttributeLabel('image'); ?>
             </div>
             <div class="box-body">
-                <div class="container-fluid">
-                    <?=
-                    $form->field($model, 'image', [
-                        'template' => '{input}{hint}{error}'
-                    ])->widget(FileInput::classname(), [
-                        'options' => ['accept' => 'image/*'],
-                        'pluginOptions' => [
-                            'previewTemplates' => [
-                                'image' => "<img src='{data}' style='width:{width};'/>"
-                             ],
-                            'previewSettings' => [
-                                'image' => [
-                                    'width' => '100%',
-                                    'height' => 'auto'
-                                ]
-                            ],
-                            'showClose' => false,
-                            'showRemove' => false,
-                            'showUpload' => false,
-                            'dropZoneEnabled' => false,
-                            'defaultPreviewContent' => [Html::img($model->item->imageUrl, ['style' => 'width: 100%;'])],
-                            'overwriteInitial' => true
-                        ]
-                    ]);
-                    ?>
-                </div>
+                <?=
+                $form->field($model, 'image', [
+                    'template' => '{input}{hint}{error}'
+                ])->widget(FileInput::classname(), [
+                    'options' => ['accept' => 'image/*'],
+                    'pluginOptions' => [
+                        'previewTemplates' => [
+                            'image' => "<img src='{data}' style='width:{width};'/>"
+                        ],
+                        'previewSettings' => [
+                            'image' => [
+                                'width' => '100%',
+                                'height' => 'auto'
+                            ]
+                        ],
+                        'showClose' => false,
+                        'showRemove' => false,
+                        'showUpload' => false,
+                        'dropZoneEnabled' => false,
+                        'defaultPreviewContent' => [Html::img($model->item->imageUrl, ['style' => 'width: 100%;'])],
+                        'overwriteInitial' => true
+                    ]
+                ]);
+                ?>
             </div>
         </div>
         <div class="box box-default">
@@ -123,20 +120,18 @@ $form = ActiveForm::begin([
                 </div>
             </div>
             <div class="box-body">
-                <div class="container-fluid">
-                    <?=
-                    $form->field($model, 'tags', [
-                        'template' => '{input}{hint}{error}'
-                    ])->widget(Select2::className(), [
-                        'data' => ArrayHelper::map(Tag::find()->orderBy(['title' => SORT_ASC])->asArray()->all(), 'id', 'title'),
-                        'options' => [
-                            'placeholder' => Yii::t('blog', 'Select tags'),
-                            'multiple' => true,
-                        ],
-                        'theme' => 'default'
-                    ]);
-                    ?>
-                </div>
+                <?=
+                $form->field($model, 'tags', [
+                    'template' => '{input}{hint}{error}'
+                ])->widget(Select2::className(), [
+                    'data' => ArrayHelper::map(Tag::find()->orderBy(['title' => SORT_ASC])->asArray()->all(), 'id', 'title'),
+                    'options' => [
+                        'placeholder' => Yii::t('blog', 'Select tags'),
+                        'multiple' => true,
+                    ],
+                    'theme' => 'default'
+                ]);
+                ?>
             </div>
         </div>
     </div>
