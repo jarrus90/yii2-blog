@@ -8,7 +8,7 @@ use yii\db\ActiveQuery;
 /**
  * ContentFinder provides some useful methods for finding active record models.
  */
-class ContentFinder extends Object {
+class BlogFinder extends Object {
 
     /** @var ActiveQuery */
     protected $tagQuery;

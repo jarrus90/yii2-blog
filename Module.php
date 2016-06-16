@@ -16,8 +16,8 @@ class Module extends BaseModule {
 
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
-        'post/<key:[A-Za-z0-9_-]+>' => 'front/post',
-        'tag/<key:[A-Za-z0-9_-]+>' => 'front/tag',
+        '<key:[A-Za-z0-9_-]+>' => 'front/post',
+        'tag/view/<key:[A-Za-z0-9_-]+>' => 'front/tag',
     ];
     
     public $redactor = [];

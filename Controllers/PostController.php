@@ -14,7 +14,7 @@ class PostController extends AdminCrudAbstract {
      */
     protected $finder;
     protected $modelClass = 'jarrus90\Blog\Models\Post';
-    protected $formClass = 'jarrus90\Blog\Models\Post';
+    protected $formClass = 'jarrus90\Blog\Models\PostForm';
     protected $searchClass = 'jarrus90\Blog\Models\Post';
 
     /**

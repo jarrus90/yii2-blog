@@ -18,8 +18,10 @@
         "yiisoft/yii2": "~2.0",
         "kartik-v/yii2-widgets": "*",
         "kartik-v/yii2-grid": "*",
+        "creocoder/yii2-flysystem": "0.8.*",
         "jarrus90/yii2-redactor": "*",
-        "jarrus90/yii2-core": "*"
+        "jarrus90/yii2-core": "*",
+        "jarrus90/yii2-user": "*"
     },
     "autoload": {
         "psr-4": {
