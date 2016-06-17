@@ -3,6 +3,7 @@
 namespace jarrus90\Blog\Controllers;
 
 use Yii;
+use yii\helpers\Url;
 use jarrus90\Blog\BlogFinder;
 use jarrus90\Blog\Models\Tag;
 use jarrus90\Blog\Models\Post;
@@ -27,6 +28,10 @@ class FrontController extends Controller {
      */
     public function __construct($id, $module, BlogFinder $finder, $config = []) {
         $this->finder = $finder;
+        Yii::$app->view->params['breadcrumbs'][] = [
+            'label' => Yii::t('blog', 'Blog'),
+            'url' => Url::toRoute(['/blog/front/posts'])
+        ];
         parent::__construct($id, $module, $config);
     }
 
@@ -35,10 +40,12 @@ class FrontController extends Controller {
                     'class' => PostSearch::className(),
                     'scenario' => 'search'
         ]);
+        $request = Yii::$app->request->get();
+        $request['active_from'] = time();
         return $this->render('posts', [
                     'finder' => $this->finder,
                     'filterModel' => $filterModel,
-                    'dataProvider' => $filterModel->search(Yii::$app->request->get()),
+                    'dataProvider' => $filterModel->search($request),
         ]);
     }
 
@@ -57,7 +64,7 @@ class FrontController extends Controller {
             $commentForm->setAttributes([
                 'created_by' => Yii::$app->user->id,
                 'post_id' => $post->id
-            ], false);
+                    ], false);
             $this->performAjaxValidation($commentForm);
             if ($commentForm->load(Yii::$app->request->post()) && $commentForm->save()) {
                 return $this->refresh();

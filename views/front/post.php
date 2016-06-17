@@ -2,9 +2,9 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-
 $this->beginContent('@jarrus90/Blog/views/_frontLayout.php');
 $this->title = $post->title;
+$this->params['breadcrumbs'][] = $post->title;
 ?>
 <div class="container-fluid">
     <div class="row">

@@ -15,13 +15,13 @@ class PostSearch extends Post {
 
     public function rules() {
         return [
-            'safeSearch' => [['key', 'search', 'tag'], 'safe', 'on' => ['search']],
+            'safeSearch' => [['key', 'search', 'tag', 'active_from'], 'safe', 'on' => ['search']],
         ];
     }
 
     public function scenarios() {
         return [
-            'search' => ['key', 'search', 'tag']
+            'search' => ['key', 'search', 'tag', 'active_from']
         ];
     }
     
@@ -42,6 +42,7 @@ class PostSearch extends Post {
             $query->andFilterWhere(['like', 'key', $this->key]);
             $query->andFilterWhere(['like', 'title', $this->search]);
             $query->andFilterWhere(['like', 'content', $this->search]);
+            $query->andFilterWhere(['<', 'active_from', $this->active_from]);
             if($this->tag) {
                 $query->joinWith('tagRelation')->andFilterWhere(['tag_id' => $this->tag]);
             }

@@ -1,8 +1,18 @@
 <?php
 
 use yii\widgets\Pjax;
+use yii\widgets\Breadcrumbs;
 ?>
-
+<?=
+Breadcrumbs::widget([
+    'homeLink' => [
+        'label' => '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>',
+        'encode' => false,
+        'url' => Yii::$app->homeUrl,
+    ],
+    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+]);
+?>
 <div class="row blog-front">
     <div class="col-md-9">
         <?php
