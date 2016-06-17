@@ -11,7 +11,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php $this->beginContent('@jarrus90/Blog/views/_adminLayout.php') ?>
 <?php
 $form = ActiveForm::begin([
-            'layout' => 'horizontal',
             'enableAjaxValidation' => true,
             'enableClientValidation' => false,
             'fieldConfig' => [
@@ -23,7 +22,7 @@ $form = ActiveForm::begin([
 ?>
 <?= $form->field($model, 'key') ?>
 <?= $form->field($model, 'title') ?>
-<?= $form->field($model, 'content')->widget(\jarrus90\Content\Widgets\Redactor::className(), [
+<?= $form->field($model, 'content')->widget(\jarrus90\Blog\Widgets\Redactor::className(), [
     'clientOptions' => [
         'lang' => Yii::$app->language,
         'minHeight' => 200,

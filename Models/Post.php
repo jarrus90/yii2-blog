@@ -2,12 +2,15 @@
 
 namespace jarrus90\Blog\Models;
 
+use Yii;
 use yii\db\ActiveRecord;
+use jarrus90\Redactor\Models\FileUploadModel;
 
 class Post extends ActiveRecord {
 
     use \jarrus90\Blog\traits\ModuleTrait;
-        
+    use \jarrus90\Blog\traits\StorageTrait;
+
     /** @inheritdoc */
     public static function tableName() {
         return '{{%blog_post}}';
@@ -20,28 +23,31 @@ class Post extends ActiveRecord {
             'search' => ['key', 'title', 'content']
         ];
     }
-    
-    public function getImageUrl(){
-        return 'https://pp.vk.me/c630316/v630316876/40330/jEkvv9Db_Xo.jpg';
+
+    public function getImageUrl() {
+        return $this->image ? Yii::getAlias($this->module->filesUploadUrl . '/' . $this->image) : false;
     }
 
     public function rules() {
         return [
             'required' => [['key', 'title', 'content', 'comments_enabled'], 'required', 'on' => ['create', 'update']],
             'safeSearch' => [['key', 'title', 'content'], 'safe', 'on' => ['search']],
+            'keyExists' => ['key', 'unique', 'when' => function($model) {
+                    return $model->key != $model->getOldAttribute('key');
+                }],
             [['active_from', 'image'], 'safe']
         ];
     }
-    
-    public function getComments(){
+
+    public function getComments() {
         return $this->hasOne(Comment::className(), ['post_id' => 'id']);
     }
-    
-    public function getTags(){
+
+    public function getTags() {
         return $this->hasMany(Tag::className(), ['id' => 'tag_id'])->via('tagRelation');
     }
-    
-    public function getTagRelation(){
+
+    public function getTagRelation() {
         return $this->hasMany(TagPost::className(), ['post_id' => 'id']);
     }
 
@@ -65,7 +71,7 @@ class Post extends ActiveRecord {
         return $dataProvider;
     }
 
-    public function addTag($tag){
+    public function addTag($tag) {
         $tagItem = new TagPost();
         $tagItem->setAttributes([
             'post_id' => $this->id,
@@ -73,12 +79,48 @@ class Post extends ActiveRecord {
         ]);
         return $tagItem->save();
     }
-    
+
     public function beforeSave($insert) {
         if ($insert) {
             $this->created_at = time();
         }
         return parent::beforeSave($insert);
+    }
+
+    public function saveImage($image, $override = true) {
+        $model = Yii::createObject([
+                    'class' => FileUploadModel::className(),
+                    'module' => $this->module->getModule('redactor'),
+                    'storage' => $this->storage,
+                    'file' => $image
+        ]);
+        if ($model->upload()) {
+            if ($override) {
+                $this->deleteImage();
+            }
+            $result = $model->getResponse();
+            return $result['filename'];
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteImage() {
+        if($this->image && $this->storage->has($this->image)) {
+            return $this->storage->delete($this->image);
+        }
+        return false;
+    }
+    
+    public function delete() {
+        if(($res = parent::delete())) {
+            foreach($this->tagRelation AS $tag) {
+                $tag->delete();
+            }
+            $this->storage->delete($this->image);
+            return $res;
+        }
+        return false;
     }
 
 }
