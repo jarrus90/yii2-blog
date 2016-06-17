@@ -10,6 +10,7 @@ class Post extends ActiveRecord {
 
     use \jarrus90\Blog\traits\ModuleTrait;
     use \jarrus90\Blog\traits\StorageTrait;
+    use \jarrus90\Blog\traits\ShortContentTrait;
 
     /** @inheritdoc */
     public static function tableName() {
@@ -40,15 +41,37 @@ class Post extends ActiveRecord {
     }
 
     public function getComments() {
-        return $this->hasOne(Comment::className(), ['post_id' => 'id']);
+        return $this->hasMany(Comment::className(), ['post_id' => 'id']);
     }
 
+    public function getNestedComments(){
+        $base = new \stdClass();
+        $base->childList = [];
+        $comments[0] = $base;
+        foreach($this->comments AS $comment) {
+            $comments[$comment->id] = $comment;
+        }
+        foreach ($comments as $id => $node) {
+            if (!empty($node->parent_id)) {
+                $comments[$node->parent_id]->childList[$id] = & $comments[$id];
+            } else {
+                $comments[0]->childList[$id] = & $comments[$id];
+            }
+        }
+        unset($comments[0]->childList[0]);
+        return $comments[0]->childList;
+    }
+    
     public function getTags() {
         return $this->hasMany(Tag::className(), ['id' => 'tag_id'])->via('tagRelation');
     }
 
     public function getTagRelation() {
         return $this->hasMany(TagPost::className(), ['post_id' => 'id']);
+    }
+    
+    public function getShortContent($length = 400){
+        return $this->shorten($this->content, $length);
     }
 
     public function search($params) {

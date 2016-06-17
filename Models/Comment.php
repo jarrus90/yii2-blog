@@ -4,12 +4,15 @@ namespace jarrus90\Blog\Models;
 
 use yii\db\ActiveRecord;
 use jarrus90\User\models\User;
+use jarrus90\User\models\Profile;
 class Comment extends ActiveRecord {
 
+    use \jarrus90\Blog\traits\ShortContentTrait;
     /**
      * @var Comment 
      */
     public $item;
+    public $childList = [];
 
     /** @inheritdoc */
     public static function tableName() {
@@ -18,20 +21,19 @@ class Comment extends ActiveRecord {
 
     public function scenarios() {
         return [
-            'update' => ['key', 'title', 'content'],
-            'create' => ['key', 'title', 'content'],
-            'search' => ['key', 'title']
+            'update' => ['content'],
+            'create' => ['content', 'post_id']
         ];
     }
 
     public function rules() {
         return [
-            'required' => [['key', 'title', 'content'], 'required', 'on' => ['create', 'update']],
+            'required' => [['content', 'created_by'], 'required', 'on' => ['create', 'update']],
             'safeSearch' => [['content'], 'safe', 'on' => ['search']],
-            'postExists' => ['post_id', 'targetClass' => Post::className(), 'targetAttribute' => 'id'],
-            'parentExists' => ['parent_id', 'targetClass' => self::className(), 'targetAttribute' => 'id'],
-            'creatorExists' => ['created_by', 'targetClass' => User::className(), 'targetAttribute' => 'id'],
-            'blockerExists' => ['blocked_by', 'targetClass' => User::className(), 'targetAttribute' => 'id'],
+            'postExists' => ['post_id', 'exist', 'targetClass' => Post::className(), 'targetAttribute' => 'id'],
+            'parentExists' => ['parent_id', 'exist', 'targetClass' => self::className(), 'targetAttribute' => 'id'],
+            'creatorExists' => ['created_by', 'exist', 'targetClass' => User::className(), 'targetAttribute' => 'id'],
+            'blockerExists' => ['blocked_by', 'exist', 'targetClass' => User::className(), 'targetAttribute' => 'id'],
         ];
     }
     
@@ -40,11 +42,15 @@ class Comment extends ActiveRecord {
     }
     
     public function getUser(){
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'created_by']);
     }
 
     public function getParent(){
         return $this->hasOne(self::className(), ['id' => 'parent_id']);
+    }
+    
+    public function getShortContent($length = 150){
+        return $this->shorten($this->content, $length);
     }
     
     public function init() {

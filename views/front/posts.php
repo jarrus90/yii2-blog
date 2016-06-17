@@ -1,8 +1,32 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\widgets\ListView;
 
+$this->beginContent('@jarrus90/Blog/views/_frontLayout.php');
+if ($filterModel->tag) {
+    $tag = $finder->findTag(['id' => $filterModel->tag])->one();
+    ?>
+    <div class="btn-group">
+        <span class="btn btn-default btn-sm">
+            <?= $tag->title; ?>
+        </span>
+        <?= Html::a('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>', Url::toRoute(['posts']), [
+                'class' => 'internal btn btn-default btn-sm'
+            ]); ?>
+    </div>
+    <hr>
+    <?php
+}
+?>
+
+<?php
+echo ListView::widget([
+    'dataProvider' => $dataProvider,
+    'itemView' => '_post',
+    'id' => 'posts-list',
+    'layout' => "{items}{pager}",
+]);
+$this->endContent();
+?>
