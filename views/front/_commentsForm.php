@@ -4,17 +4,23 @@ use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
 
 $form = ActiveForm::begin([
-            'layout' => 'horizontal',
             'enableAjaxValidation' => true,
             'enableClientValidation' => false,
-            'fieldConfig' => [
-                'horizontalCssClasses' => [
-                    'wrapper' => 'col-sm-9',
-                ],
-            ],
-        ])
+            'id' => 'comment-form',
+            'options' => [
+                'class' => 'blog-comment-form'
+            ]
+        ]);
 ?>
-<div class="container-fluid">
+<?= $form->field($model, 'parent_id')->hiddenInput(['value' => $model->parent_id])->label(false); ?>
+
+<div class="alert alert-success reply-block"> 
+    <button type="button" class="close">
+        <span aria-hidden="true">×</span>
+    </button>
+    <strong><?= Yii::t('blog', 'Reply to'); ?> <span class="username"></span></strong>
+    <p class="message"></p>
+</div>
     <?=
     $form->field($model, 'content', [
         'template' => '{input}{hint}{error}'
@@ -29,7 +35,5 @@ $form = ActiveForm::begin([
         ]
     ])
     ?>
-</div>
-<?= $form->field($model, 'post_id')->hiddenInput(['value' => $post->id])->label(false); ?>
 <?= Html::submitButton(Yii::t('content', 'Save'), ['class' => 'btn btn-success btn-block']) ?>
 <?php ActiveForm::end() ?>

@@ -25,9 +25,20 @@ class PostController extends AdminCrudAbstract {
      */
     public function __construct($id, $module, BlogFinder $finder, $config = []) {
         $this->finder = $finder;
-        Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Blog');
-        Yii::$app->view->params['breadcrumbs'][] = ['label' => Yii::t('blog', 'Posts'), 'url' => ['index']];
         parent::__construct($id, $module, $config);
+    }
+    
+    public function beforeAction($action) {
+        Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Blog');
+        if($action->id == 'index') {
+            Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Posts');
+        } else {
+            Yii::$app->view->params['breadcrumbs'][] = [
+                'label' => Yii::t('blog', 'Posts'),
+                'url' => ['index']
+            ];
+        }
+        return parent::beforeAction($action);
     }
 
     public function actionCreate() {

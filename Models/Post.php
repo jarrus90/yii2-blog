@@ -21,7 +21,7 @@ class Post extends ActiveRecord {
         return [
             'update' => ['key', 'title', 'image', 'content', 'active_from', 'comments_enabled'],
             'create' => ['key', 'title', 'image', 'content', 'active_from', 'comments_enabled'],
-            'search' => ['key', 'title', 'content']
+            'search' => ['key', 'title', 'content', 'active_from']
         ];
     }
 
@@ -32,7 +32,7 @@ class Post extends ActiveRecord {
     public function rules() {
         return [
             'required' => [['key', 'title', 'content', 'comments_enabled'], 'required', 'on' => ['create', 'update']],
-            'safeSearch' => [['key', 'title', 'content'], 'safe', 'on' => ['search']],
+            'safeSearch' => [['key', 'title', 'content', 'active_from'], 'safe', 'on' => ['search']],
             'keyExists' => ['key', 'unique', 'when' => function($model) {
                     return $model->key != $model->getOldAttribute('key');
                 }],
@@ -90,6 +90,9 @@ class Post extends ActiveRecord {
         if ($this->load($params) && $this->validate()) {
             $query->andFilterWhere(['like', 'key', $this->key]);
             $query->andFilterWhere(['like', 'title', $this->title]);
+            if(($time = strtotime($this->active_from)) > 0) {
+                $query->andFilterWhere(['<', 'active_from', $time]);
+            }
         }
         return $dataProvider;
     }

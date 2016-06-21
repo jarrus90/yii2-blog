@@ -10,10 +10,8 @@ use yii\data\ActiveDataProvider;
  * @var View $this
  * @var ActiveDataProvider $dataProvider
  */
-?>
-<?php $this->beginContent('@jarrus90/Blog/views/_adminLayout.php') ?>
-<?=
-GridView::widget([
+$this->beginContent('@jarrus90/Blog/views/_adminLayout.php');
+echo GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $filterModel,
     'pjax' => true,
@@ -43,7 +41,43 @@ GridView::widget([
     'columns' => [
         [
             'attribute' => 'content',
-            'width' => '40%'
+            'width' => '40%',
+            'format' => 'raw'
+        ],
+        [
+            'attribute' => 'created_at',
+            'class' => '\kartik\grid\DataColumn',
+            'width' => '15%',
+            'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [
+                'pickerButton' => false,
+                'type' => kartik\date\DatePicker::TYPE_COMPONENT_APPEND,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'dd-mm-yyyy'
+                ]
+            ],
+            'format' => ['date', 'php:Y-m-d H:i']
+        ],
+        [
+            'attribute' => 'userName',
+            'width' => '20%',
+            'format' => 'raw',
+            'value' => function($model) {
+                return Html::a($model->user->name, Url::toRoute(['/user/admin/info', 'id' => $model->created_by]), [
+                            'data-pjax' => 0
+                ]);
+            }
+        ],
+        [
+            'attribute' => 'postTitle',
+            'width' => '20%',
+            'format' => 'raw',
+            'value' => function($model) {
+                return Html::a($model->post->title, Url::toRoute(['post/update', 'id' => $model->post_id]), [
+                            'data-pjax' => 0
+                ]);
+            }
         ],
         [
             'class' => 'yii\grid\ActionColumn',
@@ -51,5 +85,4 @@ GridView::widget([
         ],
     ],
 ]);
-?>
-<?php $this->endContent() ?>
+$this->endContent();

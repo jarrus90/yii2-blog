@@ -28,11 +28,19 @@ class FrontController extends Controller {
      */
     public function __construct($id, $module, BlogFinder $finder, $config = []) {
         $this->finder = $finder;
-        Yii::$app->view->params['breadcrumbs'][] = [
-            'label' => Yii::t('blog', 'Blog'),
-            'url' => Url::toRoute(['/blog/front/posts'])
-        ];
         parent::__construct($id, $module, $config);
+    }
+    
+    public function beforeAction($action) {
+        if($action->id == 'posts') {
+            Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Blog');
+        } else {
+            Yii::$app->view->params['breadcrumbs'][] = [
+                'label' => Yii::t('blog', 'Blog'),
+                'url' => Url::toRoute(['/blog/front/posts'])
+            ];
+        }
+        return parent::beforeAction($action);
     }
 
     public function actionPosts() {
@@ -50,7 +58,7 @@ class FrontController extends Controller {
     }
 
     public function actionPost($key) {
-        $post = $this->finder->findPost(['key' => $key])->one();
+        $post = $this->getPost($key);
         $commentForm = null;
         if ($post->comments_enabled) {
             $item = Yii::createObject([
@@ -64,7 +72,7 @@ class FrontController extends Controller {
             $commentForm->setAttributes([
                 'created_by' => Yii::$app->user->id,
                 'post_id' => $post->id
-                    ], false);
+            ], false);
             $this->performAjaxValidation($commentForm);
             if ($commentForm->load(Yii::$app->request->post()) && $commentForm->save()) {
                 return $this->refresh();
@@ -74,6 +82,15 @@ class FrontController extends Controller {
                     'post' => $post,
                     'commentForm' => $commentForm
         ]);
+    }
+
+    protected function getPost($key) {
+        $item = $this->finder->findPost(['key' => $key])->one();
+        if ($item) {
+            return $item;
+        } else {
+            throw new \yii\web\NotFoundHttpException(Yii::t('blog', 'The requested post does not exist'));
+        }
     }
 
 }

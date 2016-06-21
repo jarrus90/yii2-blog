@@ -3,7 +3,7 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ListView;
-
+$this->title = Yii::t('blog', 'Posts');
 $this->beginContent('@jarrus90/Blog/views/_frontLayout.php');
 if ($filterModel->tag) {
     $tag = $finder->findTag(['id' => $filterModel->tag])->one();

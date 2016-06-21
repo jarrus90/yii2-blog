@@ -34,7 +34,7 @@ class PostSearch extends Post {
             ],
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_DESC
+                    'active_from' => SORT_DESC
                 ]
             ]
         ]);

@@ -1,0 +1,19 @@
+.post-item .comment.media,
+.post-item .comment.media .media-body {
+    overflow: visible;
+}
+.post-item .comment.media .comment.media {
+    border-left: 1px solid #CCC;
+    padding-left: 16px;
+}
+.blog-comment-form .reply-block {
+    display: none;
+}
+.blog-comment-form .reply-block.active {
+    display: block;
+}
+.post-item .comment.media {
+    padding: 5px 0px 10px 5px;
+    background: #FFF;
+    margin-top: 0px;
+}

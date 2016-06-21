@@ -22,7 +22,9 @@ class Comment extends ActiveRecord {
     public function scenarios() {
         return [
             'update' => ['content'],
-            'create' => ['content', 'post_id']
+            'create' => ['parent_id', 'content', 'post_id'],
+            'search' => ['content', 'post_id', 'created_by', 'created_at'],
+            'block'  => ['is_blocked', 'blocked_by', 'blocked_at']
         ];
     }
 
@@ -34,6 +36,8 @@ class Comment extends ActiveRecord {
             'parentExists' => ['parent_id', 'exist', 'targetClass' => self::className(), 'targetAttribute' => 'id'],
             'creatorExists' => ['created_by', 'exist', 'targetClass' => User::className(), 'targetAttribute' => 'id'],
             'blockerExists' => ['blocked_by', 'exist', 'targetClass' => User::className(), 'targetAttribute' => 'id'],
+            ['is_blocked', 'safe'],
+            ['blocked_at', 'integer']
         ];
     }
     
@@ -43,6 +47,10 @@ class Comment extends ActiveRecord {
     
     public function getUser(){
         return $this->hasOne(Profile::className(), ['user_id' => 'created_by']);
+    }
+    
+    public function getBlocker(){
+        return $this->hasOne(Profile::className(), ['user_id' => 'blocked_by']);
     }
 
     public function getParent(){
@@ -57,7 +65,7 @@ class Comment extends ActiveRecord {
         parent::init();
         if ($this->item instanceof Comment) {
             $this->id = $this->item->id;
-            $this->setAttributes($this->item->getAttributes());
+            $this->setAttributes($this->item->getAttributes(), false);
             $this->setIsNewRecord($this->item->getIsNewRecord());
         }
     }
@@ -77,27 +85,32 @@ class Comment extends ActiveRecord {
         ]);
         if ($this->load($params) && $this->validate()) {
             $query->andFilterWhere(['post_id' => $this->post_id]);
-            $query->andFilterWhere(['user_id' => $this->user_id]);
+            if(($time = strtotime($this->created_at)) > 0) {
+                $query->andFilterWhere(['>', 'created_at', $time]);
+                $query->andFilterWhere(['<', 'created_at', $time + 24 * 60 * 60]);
+            }
         }
         return $dataProvider;
     }
     
-    public function block() {
+    public function block($user) {
+        $this->scenario = 'block';
         $this->setAttributes([
             'is_blocked' => true,
-            'blocked_by' => Yii::$app->user->id,
+            'blocked_by' => $user,
             'blocked_at' => time()
-        ])->save();
-        return $this;
+        ], false);
+        return $this->save();
     }
     
-    public function unblock() {
+    public function unblock($user) {
+        $this->scenario = 'block';
         $this->setAttributes([
             'is_blocked' => false,
-            'blocked_by' => Yii::$app->user->id,
+            'blocked_by' => $user,
             'blocked_at' => time()
-        ])->save();
-        return $this;
+        ], false);
+        return $this->save();
     }
 
     public function beforeSave($insert) {

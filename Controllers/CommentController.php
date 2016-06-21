@@ -15,7 +15,7 @@ class CommentController extends AdminCrudAbstract {
     protected $finder;
     protected $modelClass = 'jarrus90\Blog\Models\Comment';
     protected $formClass = 'jarrus90\Blog\Models\Comment';
-    protected $searchClass = 'jarrus90\Blog\Models\Comment';
+    protected $searchClass = 'jarrus90\Blog\Models\CommentSearch';
 
     /**
      * @param string  $id
@@ -25,9 +25,20 @@ class CommentController extends AdminCrudAbstract {
      */
     public function __construct($id, $module, BlogFinder $finder, $config = []) {
         $this->finder = $finder;
-        Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Blog');
-        Yii::$app->view->params['breadcrumbs'][] = ['label' => Yii::t('blog', 'Comments'), 'url' => ['index']];
         parent::__construct($id, $module, $config);
+    }
+    
+    public function beforeAction($action) {
+        Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Blog');
+        if($action->id == 'index') {
+            Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Comments');
+        } else {
+            Yii::$app->view->params['breadcrumbs'][] = [
+                'label' => Yii::t('blog', 'Comments'),
+                'url' => ['index']
+            ];
+        }
+        return parent::beforeAction($action);
     }
 
     public function actionCreate() {
@@ -36,9 +47,18 @@ class CommentController extends AdminCrudAbstract {
     }
 
     public function actionUpdate($id) {
-        $item = $this->getItem($id);
-        Yii::$app->view->title = Yii::t('blog', 'Edit comment {title}', ['title' => $item->title]);
+        Yii::$app->view->title = Yii::t('blog', 'Edit comment');
         return parent::actionUpdate($id);
+    }
+
+    public function actionBlock($id) {
+        $model = $this->getItem($id);
+        if($model->is_blocked) {
+            $model->block(Yii::$app->user->id);
+        } else {
+            $model->unblock(Yii::$app->user->id);
+        }
+        return $this->redirect(['update', 'id' => $model->id]);
     }
 
     protected function getItem($id) {

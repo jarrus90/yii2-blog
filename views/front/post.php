@@ -2,18 +2,18 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+
 $this->beginContent('@jarrus90/Blog/views/_frontLayout.php');
 $this->title = $post->title;
 $this->params['breadcrumbs'][] = $post->title;
 ?>
-<div class="container-fluid">
+<div class="container-fluid post-item">
     <div class="row">
         <h2><?= $post->title; ?></h2>
         <?= $post->content; ?>
         <hr>
     </div>
     <div class="row">
-
         <ul class="list-inline">
             <li>
                 <div class="btn-group">
@@ -31,14 +31,16 @@ $this->params['breadcrumbs'][] = $post->title;
             </li>
         </ul>
     </div>
-</div>
-<hr>
-<?php if ($post->comments_enabled) { ?>
-    <?= $this->render('_commentsNested', ['comments' => $post->nestedComments]); ?>
-    <?= $this->render('_commentsForm', ['post' => $post, 'model' => $commentForm]); ?>
-<?php } else { ?>
-    <div class="well">
-        <?= Yii::t('blog', 'Comments to this post are disabled'); ?>
+    <div class="row">
+        <hr>
+        <?php if ($post->comments_enabled) { ?>
+            <?= $this->render('_commentsNested', ['comments' => $post->nestedComments]); ?>
+            <?= $this->render('_commentsForm', ['post' => $post, 'model' => $commentForm]); ?>
+        <?php } else { ?>
+            <div class="well">
+                <?= Yii::t('blog', 'Comments to this post are disabled'); ?>
+            </div>
+        <?php } ?>
     </div>
-<?php } ?>
+</div>
 <?php $this->endContent() ?>

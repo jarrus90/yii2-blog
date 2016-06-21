@@ -32,11 +32,13 @@ class PostForm extends \jarrus90\Core\Models\Model {
 
     public function init() {
         parent::init();
+        $this->_model->scenario = $this->scenario;
         if (!$this->_model->getIsNewRecord()) {
             $this->setAttributes($this->_model->getAttributes());
             $this->active_from = date('Y-m-d H:i', $this->active_from);
             $this->setAttributes(['tags' => ArrayHelper::map($this->_model->tagRelation, 'tag_id', 'tag_id')], false);
-            $this->_model->scenario = $this->scenario;
+        } else {
+            $this->active_from = date('Y-m-d H:i', time());
         }
     }
 

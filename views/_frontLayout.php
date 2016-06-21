@@ -2,6 +2,8 @@
 
 use yii\widgets\Pjax;
 use yii\widgets\Breadcrumbs;
+use jarrus90\Blog\BlogFrontAsset;
+BlogFrontAsset::register($this);
 ?>
 <?=
 Breadcrumbs::widget([

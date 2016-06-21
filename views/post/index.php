@@ -10,10 +10,8 @@ use yii\data\ActiveDataProvider;
  * @var View $this
  * @var ActiveDataProvider $dataProvider
  */
-?>
-<?php $this->beginContent('@jarrus90/Blog/views/_adminLayout.php') ?>
-<?=
-GridView::widget([
+$this->beginContent('@jarrus90/Blog/views/_adminLayout.php');
+echo GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $filterModel,
     'pjax' => true,
@@ -43,7 +41,7 @@ GridView::widget([
     'columns' => [
         [
             'attribute' => 'key',
-            'width' => '30%'
+            'width' => '25%'
         ],
         [
             'attribute' => 'title',
@@ -51,10 +49,18 @@ GridView::widget([
         ],
         [
             'attribute' => 'active_from',
+            'class' => '\kartik\grid\DataColumn',
             'width' => '15%',
-            'value' => function($model) {
-                return date('Y-m-d H:i', $model->active_from);
-            }
+            'filterType' => GridView::FILTER_DATE,
+            'filterWidgetOptions' => [
+                'pickerButton' => false,
+                'type' => kartik\date\DatePicker::TYPE_COMPONENT_APPEND,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'dd-mm-yyyy'
+                ]
+            ],
+            'format' => ['date', 'php:Y-m-d H:i']
         ],
         [
             'class' => 'yii\grid\ActionColumn',
@@ -62,5 +68,4 @@ GridView::widget([
         ],
     ],
 ]);
-?>
-<?php $this->endContent() ?>
+$this->endContent();

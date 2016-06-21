@@ -5,9 +5,9 @@ use yii\helpers\Html;
 ?>
 <div class="media">
     <?php if ($model->imageUrl) { ?>
-        <div class="media-left media-top">
+        <div class="media-left media-top col-md-3 hidden-sm hidden-xs">
             <a href="<?= Url::toRoute(['post', 'key' => $model->key]); ?>" class="internal">
-                <img class="media-object" src="<?= $model->imageUrl; ?>" alt="<?= $model->title; ?>">
+                <img class="media-object" src="<?= $model->imageUrl; ?>" alt="<?= $model->title; ?>" style="width: 100%">
             </a>
         </div>
     <?php } ?>
@@ -17,6 +17,7 @@ use yii\helpers\Html;
         </a>
         <?= $model->shortContent; ?>
     </div>
+    <div class="clearfix"></div>
     <hr>
     <ul class="list-inline">
         <li>
