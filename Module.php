@@ -21,13 +21,11 @@ class Module extends BaseModule {
         '<key:[A-Za-z0-9_-]+>' => 'front/post',
         'tag/view/<key:[A-Za-z0-9_-]+>' => 'front/tag',
     ];
-    
     public $filesUploadUrl = '@web/uploads/blog';
     public $filesUploadDir = '@webroot/uploads/blog';
-            
-    public $storageConfig = [];
     public $redactorConfig = [];
-        
+    public $useCommonStorage = true;
+
     public function init() {
         parent::init();
         $this->modules = [
@@ -40,16 +38,16 @@ class Module extends BaseModule {
                 'uploadDir' => $this->filesUploadDir,
             ]),
         ];
-        $this->components = [
-            'storage' => ArrayHelper::merge(
-                [
+        if(!$this->get('storage', false)) {
+            if($this->useCommonStorage && ($storage = Yii::$app->get('storage', false))) {
+                $this->set('storage', $storage);
+            } else {
+                $this->set('storage', [
                     'class' => 'creocoder\flysystem\LocalFilesystem',
                     'path' => $this->filesUploadDir
-                ], 
-                ISSET(Yii::$app->params['storage']) ? Yii::$app->params['storage'] : [],
-                $this->storageConfig
-            ),
-        ];
+                ]);
+            }
+        }
     }
 
 }
