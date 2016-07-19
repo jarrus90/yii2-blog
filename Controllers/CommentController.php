@@ -5,7 +5,7 @@ namespace jarrus90\Blog\Controllers;
 use Yii;
 use yii\base\Module as BaseModule;
 use jarrus90\Blog\BlogFinder;
-use jarrus90\Core\Web\Controllers\AdminCrudAbstract;
+use jarrus90\Admin\Web\Controllers\AdminCrudAbstract;
 
 class CommentController extends AdminCrudAbstract {
 
