@@ -24,7 +24,7 @@ class Module extends BaseModule {
     public $filesUploadUrl = '@web/uploads/blog';
     public $filesUploadDir = '@webroot/uploads/blog';
     public $redactorConfig = [];
-    public $useCommonStorage = true;
+    public $useCommonStorage = false;
 
     public function init() {
         parent::init();
