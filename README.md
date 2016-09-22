@@ -1,5 +1,7 @@
 # Yii2-blog
 
+[![Build Status](https://travis-ci.org/jarrus90/yii2-blog.svg?branch=master)](https://travis-ci.org/jarrus90/yii2-blog)
+
 The latest version includes following features:
 
 * Posts management
