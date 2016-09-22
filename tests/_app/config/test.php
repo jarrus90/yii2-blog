@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'id' => 'yii2-user-tests',
+    'id' => 'yii2-blog-tests',
     'basePath' => dirname(__DIR__),
     'language' => 'en-US',
     'aliases' => [
@@ -10,7 +10,9 @@ return [
         '@vendor' => VENDOR_DIR,
         '@bower' => VENDOR_DIR . '/bower-asset',
     ],
-    'bootstrap' => ['jarrus90\Blog\Bootstrap'],
+    'bootstrap' => [
+        'jarrus90\Blog\Bootstrap'
+    ],
     'modules' => [
         'user' => [
             'class' => 'jarrus90\User\Module'
