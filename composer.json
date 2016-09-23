@@ -16,7 +16,9 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0",
-        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-widget-datepicker": "*",
+        "kartik-v/yii2-widget-select2": "*",
+        "kartik-v/yii2-widget-fileinput": "*",
         "kartik-v/yii2-grid": "*",
         "creocoder/yii2-flysystem": "0.8.*",
         "jarrus90/yii2-redactor": "*",

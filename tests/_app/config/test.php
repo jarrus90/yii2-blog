@@ -1,25 +1,9 @@
 <?php
 
-return [
+return \yii\helpers\ArrayHelper::merge(require_once __DIR__ . '/common.php', [
     'id' => 'yii2-blog-tests',
-    'basePath' => dirname(__DIR__),
-    'language' => 'en-US',
     'aliases' => [
-        '@jarrus90/Blog' => dirname(dirname(dirname(__DIR__))),
-        '@tests' => dirname(dirname(__DIR__)),
-        '@vendor' => VENDOR_DIR,
         '@bower' => VENDOR_DIR . '/bower-asset',
-    ],
-    'bootstrap' => [
-        'jarrus90\Blog\Bootstrap'
-    ],
-    'modules' => [
-        'user' => [
-            'class' => 'jarrus90\User\Module'
-        ],
-        'blog' => [
-            'class' => 'jarrus90\Blog\Module'
-        ],
     ],
     'components' => [
         'db' => require __DIR__ . '/db.php',
@@ -35,4 +19,4 @@ return [
         ],
     ],
     'params' => [],
-];
+]);
