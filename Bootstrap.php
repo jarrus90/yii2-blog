@@ -36,6 +36,11 @@ class Bootstrap implements BootstrapInterface {
                 $configUrlRule['class'] = 'yii\web\GroupUrlRule';
                 $rule = Yii::createObject($configUrlRule);
                 $app->urlManager->addRules([$rule], false);
+            } else {
+                if(empty($app->controllerMap['migrate'])) {
+                    $app->controllerMap['migrate']['class'] = 'yii\console\controllers\MigrateController';
+                }
+                $app->controllerMap['migrate']['migrationNamespaces'][] = 'jarrus90\Blog\migrations';
             }
             if (!isset($app->get('i18n')->translations['blog*'])) {
                 $app->get('i18n')->translations['blog*'] = [
@@ -44,8 +49,6 @@ class Bootstrap implements BootstrapInterface {
                     'sourceLanguage' => 'en-US'
                 ];
             }
-
-            $app->params['yii.migrations'][] = '@jarrus90/Blog/migrations/';
         }
     }
 

@@ -1,4 +1,7 @@
 <?php
+namespace jarrus90\Blog\migrations;
+
+use Yii;
 
 class m151001_114320_blog_init extends \yii\db\Migration {
 
