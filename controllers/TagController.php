@@ -1,21 +1,21 @@
 <?php
 
-namespace jarrus90\Blog\Controllers;
+namespace jarrus90\Blog\controllers;
 
 use Yii;
 use yii\base\Module as BaseModule;
 use jarrus90\Blog\BlogFinder;
 use jarrus90\Core\Web\Controllers\AdminCrudAbstract;
 
-class CommentController extends AdminCrudAbstract {
+class TagController extends AdminCrudAbstract {
 
     /**
      * @var BlogFinder 
      */
     protected $finder;
-    protected $modelClass = 'jarrus90\Blog\Models\Comment';
-    protected $formClass = 'jarrus90\Blog\Models\Comment';
-    protected $searchClass = 'jarrus90\Blog\Models\CommentSearch';
+    protected $modelClass = 'jarrus90\Blog\Models\Tag';
+    protected $formClass = 'jarrus90\Blog\Models\Tag';
+    protected $searchClass = 'jarrus90\Blog\Models\Tag';
 
     /**
      * @param string  $id
@@ -31,10 +31,10 @@ class CommentController extends AdminCrudAbstract {
     public function beforeAction($action) {
         Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Blog');
         if($action->id == 'index') {
-            Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Comments');
+            Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Tags');
         } else {
             Yii::$app->view->params['breadcrumbs'][] = [
-                'label' => Yii::t('blog', 'Comments'),
+                'label' => Yii::t('blog', 'Tags'),
                 'url' => ['index']
             ];
         }
@@ -42,31 +42,22 @@ class CommentController extends AdminCrudAbstract {
     }
 
     public function actionCreate() {
-        Yii::$app->view->title = Yii::t('blog', 'Create comment');
+        Yii::$app->view->title = Yii::t('blog', 'Create tag');
         return parent::actionCreate();
     }
 
     public function actionUpdate($id) {
-        Yii::$app->view->title = Yii::t('blog', 'Edit comment');
+        $item = $this->getItem($id);
+        Yii::$app->view->title = Yii::t('blog', 'Edit tag {title}', ['title' => $item->title]);
         return parent::actionUpdate($id);
     }
 
-    public function actionBlock($id) {
-        $model = $this->getItem($id);
-        if($model->is_blocked) {
-            $model->block(Yii::$app->user->id);
-        } else {
-            $model->unblock(Yii::$app->user->id);
-        }
-        return $this->redirect(['update', 'id' => $model->id]);
-    }
-
     protected function getItem($id) {
-        $item = $this->finder->findComment(['id' => $id])->one();
+        $item = $this->finder->findTag(['id' => $id])->one();
         if ($item) {
             return $item;
         } else {
-            throw new \yii\web\NotFoundHttpException(Yii::t('blog', 'The requested comment does not exist'));
+            throw new \yii\web\NotFoundHttpException(Yii::t('blog', 'The requested tag does not exist'));
         }
     }
 

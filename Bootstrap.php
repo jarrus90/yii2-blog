@@ -25,7 +25,6 @@ class Bootstrap implements BootstrapInterface {
                 'commentQuery' => \jarrus90\Blog\Models\Comment::find(),
             ]);
             if (!$app instanceof ConsoleApplication) {
-                $module->controllerNamespace = 'jarrus90\Blog\Controllers';
                 $configUrlRule = [
                     'prefix' => $module->urlPrefix,
                     'rules' => $module->urlRules,

@@ -1,21 +1,21 @@
 <?php
 
-namespace jarrus90\Blog\Controllers;
+namespace jarrus90\Blog\controllers;
 
 use Yii;
 use yii\base\Module as BaseModule;
 use jarrus90\Blog\BlogFinder;
 use jarrus90\Core\Web\Controllers\AdminCrudAbstract;
 
-class TagController extends AdminCrudAbstract {
+class PostController extends AdminCrudAbstract {
 
     /**
      * @var BlogFinder 
      */
     protected $finder;
-    protected $modelClass = 'jarrus90\Blog\Models\Tag';
-    protected $formClass = 'jarrus90\Blog\Models\Tag';
-    protected $searchClass = 'jarrus90\Blog\Models\Tag';
+    protected $modelClass = 'jarrus90\Blog\Models\Post';
+    protected $formClass = 'jarrus90\Blog\Models\PostForm';
+    protected $searchClass = 'jarrus90\Blog\Models\Post';
 
     /**
      * @param string  $id
@@ -31,10 +31,10 @@ class TagController extends AdminCrudAbstract {
     public function beforeAction($action) {
         Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Blog');
         if($action->id == 'index') {
-            Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Tags');
+            Yii::$app->view->params['breadcrumbs'][] = Yii::t('blog', 'Posts');
         } else {
             Yii::$app->view->params['breadcrumbs'][] = [
-                'label' => Yii::t('blog', 'Tags'),
+                'label' => Yii::t('blog', 'Posts'),
                 'url' => ['index']
             ];
         }
@@ -42,22 +42,22 @@ class TagController extends AdminCrudAbstract {
     }
 
     public function actionCreate() {
-        Yii::$app->view->title = Yii::t('blog', 'Create tag');
+        Yii::$app->view->title = Yii::t('blog', 'Create post');
         return parent::actionCreate();
     }
 
     public function actionUpdate($id) {
         $item = $this->getItem($id);
-        Yii::$app->view->title = Yii::t('blog', 'Edit tag {title}', ['title' => $item->title]);
+        Yii::$app->view->title = Yii::t('blog', 'Edit post {title}', ['title' => $item->title]);
         return parent::actionUpdate($id);
     }
 
     protected function getItem($id) {
-        $item = $this->finder->findTag(['id' => $id])->one();
+        $item = $this->finder->findPost(['id' => $id])->one();
         if ($item) {
             return $item;
         } else {
-            throw new \yii\web\NotFoundHttpException(Yii::t('blog', 'The requested tag does not exist'));
+            throw new \yii\web\NotFoundHttpException(Yii::t('blog', 'The requested post does not exist'));
         }
     }
 

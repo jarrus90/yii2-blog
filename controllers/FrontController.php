@@ -1,6 +1,6 @@
 <?php
 
-namespace jarrus90\Blog\Controllers;
+namespace jarrus90\Blog\controllers;
 
 use Yii;
 use yii\helpers\Url;
