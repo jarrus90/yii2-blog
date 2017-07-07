@@ -5,8 +5,6 @@ namespace jarrus90\Blog\controllers;
 use Yii;
 use yii\helpers\Url;
 use jarrus90\Blog\BlogFinder;
-use jarrus90\Blog\Models\Tag;
-use jarrus90\Blog\Models\Post;
 use jarrus90\Blog\Models\Comment;
 use jarrus90\Blog\Models\PostSearch;
 use jarrus90\Core\Web\Controllers\FrontController as Controller;
