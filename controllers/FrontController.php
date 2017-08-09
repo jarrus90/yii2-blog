@@ -7,9 +7,8 @@ use yii\helpers\Url;
 use jarrus90\Blog\BlogFinder;
 use jarrus90\Blog\Models\Comment;
 use jarrus90\Blog\Models\PostSearch;
-use jarrus90\Core\Web\Controllers\FrontController as Controller;
 
-class FrontController extends Controller {
+class FrontController extends \yii\web\Controller {
 
     use \jarrus90\Core\Traits\AjaxValidationTrait;
 
